@@ -1,112 +1,89 @@
-// npm install -D gulp gulp-rename gulp-header gulp-uglify gulp-minify-css browserify vinyl-source-stream reactify babelify gulp-less gulp-connect vinyl-buffer
+/**
+ * gulpfile config file
+ * author - limi58
+ * $ npm start - to live debug app
+ * $ npm run dev - to build the development css and js bundle
+ * $ npm run dist - to build the production css and js bundle
+ */
 
-var gulp = require('gulp');
-var rename = require('gulp-rename');
-var header = require('gulp-header');
-var uglify = require('gulp-uglify');
-var minicss = require('gulp-minify-css');
-var browserify = require('browserify');
-var watchify = require('watchify');  
-var source = require('vinyl-source-stream');
-var reactify = require('reactify');
-var babelify = require('babelify');
-var less = require('gulp-less');
-var connect = require('gulp-connect');
-var buffer = require('vinyl-buffer');
-var gutil = require('gulp-util');  
-var _ = require('lodash');
+const gulp = require('gulp')
+const uglify = require('gulp-uglify')
+const browserify = require('browserify')
+const source = require('vinyl-source-stream')
+const babelify = require('babelify')
+const sass = require('gulp-sass')
+const connect = require('gulp-connect')
+const buffer = require('vinyl-buffer')
+const path = require('path')
+const gulpif = require('gulp-if')
+const header = require('gulp-header')
+const argv = require('yargs').argv
 
-var getTime = function(){
-  var date = new Date();
-  var time = date.getFullYear() + '/' + (parseInt(date.getMonth()) + 1) + '/' + date.getDate();
-  return time;
+const config = {
+  serverDir: path.join(__dirname, 'dist'),
+  port: 3838,
+  entryJs: path.join(__dirname, 'src', 'fullSlider.js'),
+  watchCss: path.join(__dirname, 'src', '**', '*.scss'),
+  watchJs: path.join(__dirname, 'src', '**', '*.js'),
+  distJs: path.join(__dirname, 'dist', 'js'),
+  distJsName: 'fullSlider.js',
+  distCss: path.join(__dirname, 'dist', 'css'),
+  header: '// fullSlider v1.1.0\n// author - limi58\n// github - https://github.com/limi58/fullSlider\n',
+  debug: argv.debug === false ? false : true,
 }
 
+/**
+ * tasks
+ */
 
-var copyright = ['/**',
-  ' * ' + getTime(),
-  ' * link      : https://github.com/limi58',
-  ' * copyright : limi58, http://www.imbgf.com',
-  ' */',
-  ''].join('\n');
+gulp.task('default', ['connect', 'watchJs', 'watchCss', 'buildJs', 'buildCss'])
+gulp.task('build', ['buildJs', 'buildCss'])
 
 gulp.task('connect', function () {
   connect.server({
-    root: './dist/',
-    livereload: true
-  });
-});
-
-
-// /*
-//   dev 
-//   $ gulp
-//  */
-
-var b = watchify(browserify(_.assign({}, watchify.args, {  
-  cache: {}, // required for watchify
-  packageCache: {}, // required for watchify
-  entries: ['./src/js/entry.jsx'],
-  transform: [babelify, reactify]
-}))); 
-
-gulp.task('default', ['connect', 'buildjs', 'buildcss', 'watchcss']);  
-b.on('update', bundle); // on any dep update, runs the bundler  
-b.on('log', gutil.log); // output build logs to terminal
-
-gulp.task('buildjs', function(){
-  bundle()
+    root: config.serverDir,
+    livereload: true,
+    port: config.port,
+  })
 })
 
-gulp.task('buildcss',function(){
-  return gulp.src('./src/styles/entry.less')
-  .pipe(less())
-  .pipe(rename('bundle.css'))
-  .pipe(gulp.dest('./dist/styles'))
-  .pipe(connect.reload());
-});
+gulp.task('buildCss', function () {
+  buildCss()
+})
 
-gulp.task('watchcss', function(){
-   gulp.watch('./src/styles/**/*.*', ['buildcss']);
-});
+gulp.task('buildJs', function () {
+  buildJs()
+})
 
-function bundle(){
-  return b.bundle()
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-    .pipe(source('bundle.js'))
+gulp.task('watchCss', function(){
+   gulp.watch(config.watchCss, ['buildCss'])
+})
+
+gulp.task('watchJs', function(){
+  gulp.watch(config.watchJs, ['buildJs'])
+})
+
+
+/**
+ * build function
+ */
+
+function buildJs() {
+  browserify(config.entryJs)
+    .transform("babelify", {presets: ["es2015"]})
+    .bundle()
+    .on('error', console.error)
+    .pipe(source(config.distJsName))
     .pipe(buffer())
-    // .pipe(uglify())
-    .pipe(gulp.dest('./dist/js'))
-    .pipe(connect.reload());
+    .pipe(gulpif(! config.debug, uglify()))
+    .pipe(gulpif(! config.debug, header(config.header)))
+    .pipe(gulp.dest(config.distJs))
+    .pipe(connect.reload())
+} 
+
+function buildCss(){
+  gulp.src(config.watchCss)
+   .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+   .pipe(gulp.dest(config.distCss))
+   .pipe(connect.reload())
 }
-
-
-// /*
-//   production 
-//   $ gulp build
-//  */
-gulp.task('build',['bundlejs','bundlecss']);
-
-gulp.task('bundlejs',function(){
-  browserify('./src/js/entry.jsx')
-  .transform(reactify)
-  .transform(babelify)
-  .bundle()
-  .pipe(source('bundle.js'))
-  .pipe(buffer())
-  .pipe(uglify())
-  .pipe(gulp.dest('./dist/js/'))
-  console.log('seccessful build the js !!!!!!!!!!!!!!!!!!!')
-});
-
-gulp.task('bundlecss',function(){
-  return gulp.src('./src/styles/entry.less')
-  .pipe(less())
-  .pipe(minicss())
-  .pipe(rename('bundle.css'))
-  .pipe(gulp.dest('./dist/styles/'))
-  console.log('seccessful build the css !!!!!!!!!!!!!!!!!!!')
-});
-
-
-
