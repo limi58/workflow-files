@@ -22,14 +22,15 @@ const argv = require('yargs').argv
 const config = {
   serverDir: path.join(__dirname, 'dist'),
   port: 3838,
-  entryJs: path.join(__dirname, 'src', 'fullSlider.js'),
+  entryJs: path.join(__dirname, 'src', 'main.js'), //array or simgle
+  entryCss: path.join(__dirname, 'src', 'main.scss'), // * or simgle
   watchCss: path.join(__dirname, 'src', '**', '*.scss'),
   watchJs: path.join(__dirname, 'src', '**', '*.js'),
   distJs: path.join(__dirname, 'dist', 'js'),
-  distJsName: 'fullSlider.js',
+  distJsName: 'main.js',
   distCss: path.join(__dirname, 'dist', 'css'),
-  header: '// fullSlider v1.1.0\n// author - limi58\n// github - https://github.com/limi58/fullSlider\n',
-  debug: argv.debug === false ? false : true,
+  header: '// fullSlider v1.2.0\n// author - limi58\n// github - https://github.com/limi58/fullSlider\n',
+  debug: argv.debug === 'false' ? false : true,
 }
 
 /**
@@ -78,12 +79,12 @@ function buildJs() {
     .pipe(gulpif(! config.debug, uglify()))
     .pipe(gulpif(! config.debug, header(config.header)))
     .pipe(gulp.dest(config.distJs))
-    .pipe(connect.reload())
+    .pipe(gulpif(config.debug, connect.reload()))
 } 
 
 function buildCss(){
-  gulp.src(config.watchCss)
+  gulp.src(config.entryCss)
    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
    .pipe(gulp.dest(config.distCss))
-   .pipe(connect.reload())
+   .pipe(gulpif(config.debug, connect.reload()))
 }
