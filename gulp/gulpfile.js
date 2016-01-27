@@ -18,6 +18,7 @@ const path = require('path')
 const gulpif = require('gulp-if')
 const header = require('gulp-header')
 const argv = require('yargs').argv
+const watchify = require('watchify')
 
 const config = {
   serverDir: path.join(__dirname, 'dist'),
@@ -32,6 +33,8 @@ const config = {
   header: '// fullSlider v1.2.0\n// author - limi58\n// github - https://github.com/limi58/fullSlider\n',
   debug: argv.debug === 'false' ? false : true,
 }
+
+const B = browserify({entries: config.entryJs,cache: {},packageCache: {},plugin: [watchify]})
 
 /**
  * tasks
@@ -57,11 +60,11 @@ gulp.task('buildJs', function () {
 })
 
 gulp.task('watchCss', function(){
-   gulp.watch(config.watchCss, ['buildCss'])
+  gulp.watch(config.watchCss, ['buildCss'])
 })
 
 gulp.task('watchJs', function(){
-  gulp.watch(config.watchJs, ['buildJs'])
+  B.on('update', buildJs)
 })
 
 
@@ -70,8 +73,8 @@ gulp.task('watchJs', function(){
  */
 
 function buildJs() {
-  browserify(config.entryJs)
-    .transform("babelify", {presets: ["es2015"]})
+  console.log('building js...')
+  B.transform("babelify", {presets: ["es2015"]})
     .bundle()
     .on('error', console.error)
     .pipe(source(config.distJsName))
@@ -84,7 +87,9 @@ function buildJs() {
 
 function buildCss(){
   gulp.src(config.entryCss)
-   .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-   .pipe(gulp.dest(config.distCss))
-   .pipe(gulpif(config.debug, connect.reload()))
+    .pipe(sass({
+      outputStyle: config.debug ? '' : 'compressed'
+    }).on('error', sass.logError))
+    .pipe(gulp.dest(config.distCss))
+    .pipe(gulpif(config.debug, connect.reload()))
 }
