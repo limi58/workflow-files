@@ -1,2 +1,2 @@
-# webpackConfig
-some webpack and gulpfile config js
+# workflow config
+Some webpack and gulpfile config files
