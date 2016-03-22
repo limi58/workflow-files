@@ -1,7 +1,6 @@
-
-var webpack = require('webpack')
-var path = require('path')
-var isProduction = process.env.NODE_ENV === 'production'
+const webpack = require('webpack')
+const path = require('path')
+const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
     debug: isProduction ? false : true,
@@ -37,21 +36,12 @@ module.exports = {
       ]
     },
     // require 可以免掉后缀名
-    // alias 可以设置别名
     resolve: {
-        extensions: ['', '.js', '.json', '.scss', '.jsx'],
-        alias: {
-          'panel': path.join(__dirname, 'src/js/components/common/panel/panel.jsx'),
-          'modal': path.join(__dirname, 'src/js/components/common/modal.jsx'),
-          'loader': path.join(__dirname, 'src/js/components/common/loader.jsx'),
-          'uploadGroup': path.join(__dirname, 'src/js/components/common/uploadGroup.jsx'),
-
-          'session': path.join(__dirname, 'src/js/servies/session.js'),
-          'errorCatch': path.join(__dirname, 'src/js/servies/errorCatch.js'),
-          'ajax': path.join(__dirname, 'src/js/servies/ajax.js'),
-          'publicStore': path.join(__dirname, 'src/js/stores/public/publicStore.js'),
-          'publicAction': path.join(__dirname, 'src/js/actions/public/publicAction.js'),
-        }
+      extensions: ['', '.js', '.json', '.scss', '.jsx'],
+      // alias 可以设置别名
+      alias: {
+        'panel': path.join(__dirname, 'src/js/components/common/panel/panel.jsx')
+      }
     },
     // 插件
     plugins: isProduction ? '' : [
