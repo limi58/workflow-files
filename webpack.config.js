@@ -42,7 +42,7 @@ module.exports = {
       }
     },
     // 插件
-    plugins: isProduction ? '' : [
-      new webpack.HotModuleReplacementPlugin(),
+    plugins: isProduction ? [] : [
+      new webpack.HotModuleReplacementPlugin()
     ]
 }
