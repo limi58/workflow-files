@@ -4,14 +4,12 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
     debug: isProduction ? false : true,
-    devtool: false,
-    // entry 和 output 的绝对位置
-    // context: __dirname,
+    devtool: isProduction ? '' : 'source-map',
     //页面入口文件配置
-    entry: isProduction ? ['./src/js/entry.jsx'] : [
+    entry: isProduction ? ['./src/js/entry.js'] : [
       'webpack-dev-server/client?http://localhost:3000/',
       'webpack/hot/only-dev-server',
-      './src/js/entry.jsx'
+      './src/js/entry.js'
     ],
     output: {
         // 资源路径的前缀而已，便于更改cdn
@@ -40,7 +38,7 @@ module.exports = {
       extensions: ['', '.js', '.json', '.scss', '.jsx'],
       // alias 可以设置别名
       alias: {
-        'panel': path.join(__dirname, 'src/js/components/common/panel/panel.jsx')
+        'config': path.join(__dirname, 'config.js')
       }
     },
     // 插件
