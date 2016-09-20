@@ -5,6 +5,9 @@ const DEBUG = process.env.NODE_ENV !== 'production'
 module.exports = {
   debug: DEBUG,
   devtool: DEBUG ? 'source-map' : '',
+  entry: {
+    scroll: path.join(__dirname, 'scroll.js'),
+  },
   // entry: DEBUG ? [
   //   // 'webpack-dev-server/client?http://localhost:3000/',
   //   // 'webpack/hot/only-dev-server',
@@ -16,18 +19,18 @@ module.exports = {
     // 资源路径的前缀而已，便于更改cdn
     // publicPath: 'http://localhost:3000/',
     // // 所有 output 输出的绝对位置，js、jpg 等等
-    // path: path.join(__dirname, 'dist'),
-    // filename: "libname.js"
+    path: path.join(__dirname, 'dist'),
+    filename: "libname.js"
   },
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
+        test: /\.js$/,
         loaders: DEBUG ? ['react-hot', 'babel'] : ['babel'],
         exclude: /node_modules/
       },
       {
-        test: /\.(otf|eot|svg|ttf|woff)/,
+        test: /\.(otf|eot|svg|ttf|woff|png|jpg)/,
         loader: 'url-loader?limit=268192'
       },
       { test: /\.scss$/, loader: "style!css!sass" },
