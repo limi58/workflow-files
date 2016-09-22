@@ -12,7 +12,6 @@ Some webpack and gulpfile config files
 }
 ```
 
-# install 
-```
-npm --registry=https://registry.npm.taobao.org install --save-dev webpack babel-core babel-preset-es2015 babel-loader url-loader style-loader css-loader sass-loader webpack-dev-server
-```
+# install
+
+npm --registry=https://registry.npm.taobao.org install --save-dev webpack babel-core babel-preset-es2015 babel-loader url-loader file-loader style-loader css-loader sass-loader webpack-dev-server extract-text-webpack-plugin

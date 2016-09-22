@@ -33,7 +33,9 @@ module.exports = {
         test: /\.(otf|eot|svg|ttf|woff|png|jpg)/,
         loader: 'url-loader?limit=268192'
       },
-      { test: /\.scss$/, loader: "style!css!sass" },
+      // 外部生成 css
+      { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader") },
+      // { test: /\.scss$/, loader: "style!css!sass" },
       { test: /\.css$/, loader: "style!css" }
     ]
   },
@@ -48,6 +50,7 @@ module.exports = {
   plugins: DEBUG ? [
     new webpack.HotModuleReplacementPlugin()
   ] : [
+    new ExtractTextPlugin(path.join('css', '[name].css')),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': '"production"'
