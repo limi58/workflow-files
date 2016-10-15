@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const path = require('path')
 const DEBUG = process.env.NODE_ENV !== 'production'
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 module.exports = {
   debug: DEBUG,
