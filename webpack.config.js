@@ -13,7 +13,6 @@ const basePlugins = [
 ]
 
 module.exports = {
-  debug: DEBUG,
   devtool: DEBUG ? 'source-map' : '',
   entry: {
     scroll: path.join(__dirname, 'scroll.js'),
@@ -33,24 +32,29 @@ module.exports = {
     filename: "libname.js"
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loaders: DEBUG ? ['react-hot', 'babel'] : ['babel'],
+        use: DEBUG ? ['react-hot-loader', 'babel-loader'] : ['babel-loader'],
         exclude: /node_modules/
       },
       {
         test: /\.(otf|eot|svg|ttf|woff|png|jpg)/,
-        loader: 'url-loader?limit=268192'
+        use: 'url-loader?limit=268192'
       },
       // 外部生成 css
-      { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!styl-loader") },
-      { test: /\.css$/, loader: "style!css" }
+      {
+        test: /\.styl$/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader", use: ["css-loader", "stylus-loader"]
+        })
+      },
+      { test: /\.css$/, use: ["style-loader", "css-loader"] }
     ]
   },
   // require 可以免掉后缀名
   resolve: {
-    extensions: ['', '.js', '.json', '.styl', '.vue', '.css'],
+    extensions: ['.js', '.json', '.styl', '.vue', '.css'],
     // alias 设置别名
     alias: {
       '_config': path.join(__dirname, 'config.js')
