@@ -13,29 +13,25 @@ const basePlugins = [
 ]
 
 module.exports = {
-  devtool: DEBUG ? 'source-map' : '',
+  devtool: DEBUG ? 'cheap-module-source-map' : '',
+
   entry: {
     scroll: path.join(__dirname, 'scroll.js'),
   },
-  // entry: DEBUG ? [
-  //   // 'webpack-dev-server/client?http://localhost:3000/',
-  //   // 'webpack/hot/only-dev-server',
-  //   './src/libname.js'
-  // ] : './src/libname.js',
+
   output: {
     library: 'libname',
     libraryTarget: 'umd',
-    // 资源路径的前缀而已，便于更改cdn
-    // publicPath: 'http://localhost:3000/',
-    // // 所有 output 输出的绝对位置，js、jpg 等等
+    publicPath: 'http://localhost:3000/',
     path: path.join(__dirname, 'dist'),
     filename: "libname.js"
   },
+
   module: {
     rules: [
       {
         test: /\.js$/,
-        use: DEBUG ? ['react-hot-loader', 'babel-loader'] : ['babel-loader'],
+        use: DEBUG ? ['react-hot-loader', 'babel-loader', 'eslint-loader'] : ['babel-loader'],
         exclude: /node_modules/
       },
       {
@@ -52,22 +48,43 @@ module.exports = {
       { test: /\.css$/, use: ["style-loader", "css-loader"] }
     ]
   },
-  // require 可以免掉后缀名
+
   resolve: {
     extensions: ['.js', '.json', '.styl', '.vue', '.css'],
-    // alias 设置别名
     alias: {
       '_config': path.join(__dirname, 'config.js')
     }
   },
+
   plugins: DEBUG ? basePlugins.concat(
     [new webpack.HotModuleReplacementPlugin()]
   ) : basePlugins.concat([
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'vendor',
+    //   minChunks: function(module) {
+    //     return module.context && module.context.indexOf('node_modules') !== -1
+    //   }
+    // }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'manifest'
+    // }),
     new ExtractTextPlugin(path.join('[name].css')),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': '"production"'
       }
     }),
-  ])
+  ]),
+
+  devServer: {
+    contentBase: path.join(__dirname, "dist"),
+    overlay: true,
+    compress: false,
+    hot: true,
+    hotOnly: true,
+    inline: true,
+    host: "0.0.0.0",
+    port: 8080,
+    clientLogLevel: "info",
+  },
 }
