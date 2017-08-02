@@ -10,21 +10,30 @@ const basePlugins = [
     template: './index.html',
     inject: 'body',
   }),
+  // cache
+  // new webpack.optimize.CommonsChunkPlugin({
+  //   name: ["react", "manifest"],
+  //   minChunks: Infinity,
+  // }),
+  // new webpack.HashedModuleIdsPlugin(),
 ]
 
 module.exports = {
   devtool: DEBUG ? 'cheap-module-source-map' : '',
 
   entry: {
+    // cache
+    // react: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'react-router-dom'],
     scroll: path.join(__dirname, 'scroll.js'),
   },
 
   output: {
-    library: 'libname',
-    libraryTarget: 'umd',
+    // library: 'libname',
+    // libraryTarget: 'umd',
     publicPath: 'http://localhost:3000/',
     path: path.join(__dirname, 'dist'),
-    filename: "libname.js"
+    filename: '[name].[chunkhash].js',
+    chunkFilename: "[name].[chunkhash].js",
   },
 
   module: {
@@ -59,18 +68,11 @@ module.exports = {
   plugins: DEBUG ? basePlugins.concat(
     [new webpack.HotModuleReplacementPlugin()]
   ) : basePlugins.concat([
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'vendor',
-    //   minChunks: function(module) {
-    //     return module.context && module.context.indexOf('node_modules') !== -1
-    //   }
-    // }),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'manifest'
-    // }),
     new ExtractTextPlugin(path.join('[name].css')),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      "process.env": {
+        NODE_ENV: JSON.stringify("production")
+      }
     }),
   ]),
 
