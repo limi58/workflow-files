@@ -1,10 +1,14 @@
-/node_modules/
+document
+workflow
 *.swp
-*~
-npm-debug.log
 /storage
 .DS_Store
 .idea
+.vs
+/public/spa
+/backup
+*.zip
+*.psd
 
 # Logs
 *.log

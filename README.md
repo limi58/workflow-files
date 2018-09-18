@@ -1,5 +1,5 @@
 # workflow config
-webpack3.x, rollup, gulpfile config files
+webpack4.x, gulpfile config files
 
 # package.json 
 
@@ -7,35 +7,37 @@ webpack3.x, rollup, gulpfile config files
 
 ```js
 "devDependencies": {
-  "babel-cli": "^6.14.0",
-  "babel-core": "^6.25.0",
-  "babel-loader": "^6.2.4",
-  "babel-plugin-transform-decorators-legacy": "^1.3.4",
-  "babel-preset-es2015": "^6.9.0",
-  "babel-preset-latest": "^6.14.0",
-  "babel-preset-react": "^6.11.1",
-  "babel-preset-stage-0": "^6.22.0",
-  "bundle-loader": "^0.5.5",
-  "chunk-manifest-webpack-plugin": "^1.1.0",
-  "clean-webpack-plugin": "^0.1.16",
-  "cross-env": "^5.0.1",
-  "css-loader": "^0.28.0",
-  "eslint": "^4.18.2",
-  "eslint-config-standard": "^11.0.0",
-  "eslint-plugin-import": "^2.9.0",
-  "eslint-plugin-node": "^6.0.1",
-  "eslint-plugin-promise": "^3.7.0",
-  "eslint-plugin-standard": "^3.0.1",
-  "extract-text-webpack-plugin": "^2.1.2",
-  "file-loader": "^0.11.1",
-  "html-webpack-plugin": "^2.29.0",
-  "style-loader": "^0.16.1",
+  "autoprefixer": "^8.4.1",
+  "babel-core": "^6.26.3",
+  "babel-loader": "^7.1.4",
+  "babel-plugin-syntax-dynamic-import": "^6.18.0",
+  "babel-preset-env": "^1.6.1",
+  "babel-preset-es2015": "^6.24.1",
+  "babel-preset-react": "^6.24.1",
+  "babel-preset-stage-0": "^6.24.1",
+  "clean-webpack-plugin": "^0.1.19",
+  "css-loader": "^0.28.11",
+  "file-loader": "^1.1.11",
+  "html-webpack-plugin": "^3.2.0",
+  "mini-css-extract-plugin": "^0.4.0",
+  "postcss-loader": "^2.1.5",
+  "pug": "^2.0.3",
+  "pug-loader": "^2.4.0",
+  "react": "^16.4.2",
+  "react-dom": "^16.4.2",
+  "react-hot-loader": "^4.2.0",
+  "react-lazyload": "^2.3.0",
+  "react-loadable": "^5.4.0",
+  "react-router-dom": "^4.2.2",
+  "style-loader": "^0.21.0",
   "stylus": "^0.54.5",
-  "stylus-loader": "^3.0.1",
-  "url-loader": "^0.5.9",
-  "webpack": "^3.3.0",
-  "webpack-chunk-hash": "^0.4.0",
-  "webpack-dev-server": "^2.4.5"
+  "stylus-loader": "^3.0.2",
+  "uglifyjs-webpack-plugin": "^1.2.5",
+  "webpack": "^4.10.1",
+  "webpack-bundle-analyzer": "^2.13.1",
+  "webpack-cli": "^2.1.4",
+  "webpack-dev-server": "^3.1.4",
+  "webpack-merge": "^4.1.2",
 }
 ```
 
@@ -43,25 +45,8 @@ webpack3.x, rollup, gulpfile config files
 
 ```js
 "scripts": {
-  "dev": "webpack-dev-server --open",
-  "build": "webpack -p --progress --profile --colors",
-  "watch": "webpack --watch",
-  "test": "node ./test/test.js"
+  "start": "npx webpack-dev-server --hot --config webpack_dev.js",
+  "build": "npx webpack --mode=production --config webpack_prod.js --progress --colors",
 }
 ```
 
-**rollup scripts**
-
-```js
-"scripts": {
-  "dev": "set NODE_ENV=dev&&rollup -c -w",
-  "build": "set NODE_ENV=production&&rollup -c",
-  "test": "mocha"
-},
-```
-
-# install
-
-**rollup**
-
-npm --registry=https://registry.npm.taobao.org i -D babel-core babel-plugin-external-helpers babel-preset-es2015 babel-preset-stage-0 rollup-plugin-babel rollup-plugin-cleanup rollup-plugin-commonjs rollup-plugin-filesize rollup-plugin-livereload rollup-plugin-serve rollup-plugin-uglify rollup-watch rollup-plugin-replace rollup-plugin-eslint

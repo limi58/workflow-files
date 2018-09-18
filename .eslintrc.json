@@ -3,13 +3,25 @@
     "browser": true,
     "es6": true
   },
-  "extends": "standard",
+  "extends": ["standard", "plugin:react/recommended"],
+  "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module"
   },
+  "settings": {
+    "react": {
+      "version": "16.4.2"
+    }
+  },
   "rules": {
-    "generator-star-spacing": ["error", {"before": true, "after": false}],
-    "comma-dangle": ["error", "always"],
-    "no-return-assign": ["error"]
+    "strict": 0,
+    "react/prop-types": [0],
+    "generator-star-spacing": ["error", { "before": true, "after": false }],
+    "comma-dangle": ["error", "always-multiline"],
+    "array-bracket-23": ["off"],
+    "no-multiple-empty-lines": ["off"],
+    "space-before-function-paren": ["off"],
+    "quotes": ["off"],
+    "no-return-assign": ["off"]
   }
 }
